@@ -1,0 +1,10 @@
+version: '3'
+services:
+  ansible:
+    image: benben/ansible:ubuntu
+    volumes:
+      - "./ssh/config:/root/.ssh/config"
+      - "./ansible/hosts:/etc/ansible/hosts"
+      - "./playbooks:/root/playbooks"
+    links:
+      - server

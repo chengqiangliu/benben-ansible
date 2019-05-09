@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: root
+  vars:
+    eric: true
+
+  tasks:
+    - name: Test debug module
+      debug: 
+        msg: "Ansible debug module test"
+        var: eric
+

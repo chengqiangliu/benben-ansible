@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: root
+  
+  tasks:
+    - name: Install latest version of "openjdk-8-jdk" ignoring "install-recommends"
+      apt:
+        name: "openjdk-8-jdk"
+        state: latest
+        install-recommends: no
