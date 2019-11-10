@@ -1,0 +1,19 @@
+---
+- name: playbook test
+  hosts: web
+
+#  vars:
+#    greetings: "hello from playbook vars"
+
+  vars_files:
+  - "vars_files/demo.yml"
+
+  tasks: 
+  - name: check host connection
+    ping: 
+  - name: debug test
+    debug:
+      msg: "hello debug test"
+  - name: vars test
+    debug:
+      msg: "{{greetings}}"
