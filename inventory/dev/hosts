@@ -1,0 +1,5 @@
+[web]
+ansible-node1
+
+[db]
+ansible-node2

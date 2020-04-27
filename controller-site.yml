@@ -1,0 +1,35 @@
+- name: config ansible controller
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: copy GitHub private key
+      copy: 
+        src: private_key/git_id_rsa
+        dest: /home/vagrant/.ssh
+        owner: vagrant
+        group: vagrant
+        mode: 0600
+    - name: create ffms directory if not exists
+      file: 
+        path: /home/vagrant/ffms
+        state: directory
+    - name: install git
+      yum: 
+        name: git
+        state: present
+    # - include_role:
+    #     name: geerlingguy.nodejs
+    - name: checkout ffms-vue
+      git:
+        repo: git@github.com:chengqiangliu/ffms-vue.git
+        dest: /home/vagrant/ffms
+        accept_hostkey: yes
+        key_file: /home/vagrant/.ssh/git_id_rsa
+    - name: Install packages based on package.json
+      npm:
+        path: /home/vagrant/ffms
+    - name: Build Vue App
+      shell: npm run build
+      args:
+        chdir: /home/vagrant/ffms

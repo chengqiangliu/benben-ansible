@@ -1,0 +1,110 @@
+- name: ansible-demo
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: check connection
+      ping: 
+    - name: create .ssh directory if not exists
+      file: 
+        path: /home/vagrant/.ssh
+        state: directory
+        owner: vagrant
+        group: vagrant
+    - name: copy github private key
+      copy: 
+        src: private_key/id_rsa
+        dest: /home/vagrant/.ssh
+        owner: vagrant
+        group: vagrant
+        mode: 0600
+    - name: create ffms directory if not exists
+      file: 
+        path: /home/vagrant/ffms
+        state: directory
+    # - name: uninstall nodejs
+    #   yum: 
+    #     name: nodejs
+    #     state: absent
+    # - include_role:
+    #     name: geerlingguy.nodejs
+    # - name: Install @vue/cli
+    #   npm:
+    #     name: "@vue/cli"
+    #     global: true
+    #   become: yes
+    # - name: create group ansible-demo
+    #   group:
+    #     name: ansible-demo
+    #     state: present
+    # - name: delete froup ansible-demo
+    #   group:
+    #     name: ansible-demo
+    #     state: absent
+    # - name: create user
+    #   user:
+    #     name: demo
+    #     password: "{{ 'demo' | password_hash('sha512') }}"
+    # - name: delete user
+    #   user:
+    #     name: demo
+    #     state: absent
+    - name: install git
+      yum: 
+        name: git
+        state: present
+    - name: checkout ffms-vue
+      git:
+        repo: git@github.com:chengqiangliu/ffms-vue.git
+        dest: /home/vagrant/ffms
+        accept_hostkey: yes
+        key_file: /home/vagrant/.ssh/id_rsa
+    - name: uninstall nodejs if exists
+      yum: 
+        name: nodejs
+        state: absent
+    - name: "安装node.js源"
+      shell: curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+    - name: "yum安装node.js"
+      yum: name=nodejs state=present
+    - name: install nodejs
+      yum: 
+        name: nodejs
+        state: present
+    - name: Install vue-cli package globally.
+      npm:
+        name: '@vue/cli'
+        global: yes
+    - name: Install packages based on package.json.
+      npm:
+        path: /home/vagrant/ffms
+    # - name: start ffms
+    #   command: npm run serve
+    # - name: uninstall git
+    #   yum: 
+    #     name: git
+    #     state: absent
+    # - name: test command
+    #   command: cat /etc/hosts
+    #   register: hosts_value
+    # - name: print hosts_value
+    #   debug:
+    #     msg: "{{ hosts_value }}"
+    # - name: install epel
+    #   yum:
+    #     name: epel-release
+    #     state: present
+    # - name: install nginx
+    #   yum:
+    #     name: nginx
+    #     state: present
+    # - name: change index html
+    #   template: 
+    #     src: templates/index.html.j2
+    #     dest: /usr/share/nginx/html/index.html
+    # - name: start service nginx
+    #   service:
+    #     name: nginx
+    #     state: started
+

@@ -1,0 +1,42 @@
+- name: deploy app to remote nodes
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: check connection
+      ping: 
+    - name: create ffms directory if not exists
+      file: 
+        path: /home/vagrant/ffms
+        state: directory
+    - name: copy app file
+      copy: 
+        src: /home/vagrant/ffms/dist
+        dest: /home/vagrant/ffms
+        owner: vagrant
+        group: vagrant
+    - name: copy startup file
+      copy: 
+        src: /home/vagrant/benben-ansible/startup/start.sh
+        dest: /home/vagrant/start.sh
+        owner: vagrant
+        group: vagrant
+        mode: 0700
+    - name: install node.js source
+      shell: curl --silent --location https://rpm.nodesource.com/setup_12.x | sudo bash -
+    - name: install nodejs
+      yum: 
+        name: nodejs
+        state: present
+    - name: Install serve
+      npm:
+        name: "serve"
+        global: true
+    # - name: "Stop Vue App"
+    #   shell: "kill -9 $(ps -ef | grep 'ffms/dist' | grep -v grep | awk '{print $2}')"
+    #   ignore_errors: yes
+    - name: Start Vue App
+      shell: "/home/vagrant/start.sh &"
+      async: 10
+      poll: 0

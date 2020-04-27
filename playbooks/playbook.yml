@@ -1,0 +1,43 @@
+- name: play test
+  hosts: web
+
+  vars:
+    greetings: "hello from playbook vars"
+    loop_test:
+      - "test1"
+      - "test2"
+      - "test3"
+    demo:
+      - "demo1"
+      - "demo2"
+      - "demo3"
+  
+  vars_files:
+    - "vars/vars_file.yml"
+  
+  tasks: 
+    - name: check host connection
+      ping: 
+    - name: debug test
+      debug:
+        msg: "hello world, System {{ inventory_hostname }}"
+    - name: vars test
+      debug: 
+        msg: "{{ greetings }}"
+    - name: vars files test
+      debug:
+        msg: "{{ greeting_from_vars_file }}"
+    - name: loop and when test
+      debug:
+        msg: "{{ item }}"
+      with_items: "{{ loop_test }}"
+      when: item != "test1"
+    - name: nested loop test
+      debug:
+        msg: "{{ item[0] }}, {{ item[1] }}"
+      with_nested:  
+        - "{{ loop_test }}"
+        - "{{ demo }}"
+    - name: host and group vars test
+      debug:
+        msg: "ip: {{ ip_adds }}, http port: {{ http_port }}"

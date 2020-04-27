@@ -1,0 +1,6 @@
+[web]
+; ansible-node[1:3] ansible_connection=ssh ansible_user=vagrant
+ansible-node1 ansible_connection=ssh ansible_user=vagrant
+
+[db]
+ansible-node2 ansible_connection=ssh ansible_user=vagrant
